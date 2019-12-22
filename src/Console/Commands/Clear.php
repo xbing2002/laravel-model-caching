@@ -56,6 +56,17 @@ class Clear extends Command
             return 1;
         }
 
+        $storage = Cache::getStore()->getRedis(); // will return instance of FileStore
+        dd(get_class($storage));
+$filesystem = $storage->getFilesystem(); // will return instance of Filesystem
+
+$keys = [];
+foreach ($filesystem->allFiles('') as $file1) {
+  foreach ($filesystem->allFiles($file1) as $file2) {
+    $keys = array_merge($keys, $filesystem->allFiles($file1 . '/' . $file2));
+  }
+}
+dd($keys);
         // get all tags
         $tags = collect()
             ->filter(function ($tag) use ($database) {
